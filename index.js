@@ -26,9 +26,13 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const mensCollection = client.db("Shop").collection("men");
-    console.log(mensCollection)
-
+    const mensCollection = client.db("shop").collection("men");
+  
+    app.get('/men', async(req, res)=>{
+      const menCloth = mensCollection.find();
+      const result = await menCloth.toArray();
+      res.send(result) 
+    })
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -39,6 +43,7 @@ async function run() {
   }
 }
 run().catch(console.dir);
+
 
 
 
