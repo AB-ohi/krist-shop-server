@@ -27,6 +27,7 @@ async function run() {
     await client.connect();
 
     const mensCollection = client.db("shop").collection("men");
+    const UserCollection = client.db("shop").collection("user");
   
     app.get('/men', async(req, res)=>{
       const menCloth = mensCollection.find();
@@ -45,7 +46,12 @@ async function run() {
         res.status(404).send({ error: 'Man not found' });
       }
     })
-
+    // app.get('/user/:name',async(req,res)=>{
+    //   const name = req.params.name;
+    //   const userId = {name: new ObjectId(name)};
+    //   const result = await UserCollection.findOne(userId)
+    //   res.send(result)
+    // })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
