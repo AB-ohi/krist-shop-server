@@ -46,12 +46,21 @@ async function run() {
         res.status(404).send({ error: 'Man not found' });
       }
     })
-    // app.get('/user/:name',async(req,res)=>{
-    //   const name = req.params.name;
-    //   const userId = {name: new ObjectId(name)};
-    //   const result = await UserCollection.findOne(userId)
-    //   res.send(result)
-    // })
+    app.get('/user', async(req,res)=>{
+      const user = UserCollection.find();
+      const result = await user.toArray()
+      res.send(result)
+    })
+    app.get('/user/:name',async(req,res)=>{
+      const name = req.params.name;
+      const userId = {name: name};
+      const result = await UserCollection.findOne(userId)
+      if(result){
+        res.send(result)
+      } else{
+        res.status(404).send({error: "user can't found"})
+      }
+    })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
