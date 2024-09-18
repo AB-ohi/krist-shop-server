@@ -54,11 +54,15 @@ async function run() {
     app.get('/user/:name',async(req,res)=>{
       const name = req.params.name;
       const userId = {name: name};
-      const result = await UserCollection.findOne(userId)
-      if(result){
-        res.send(result)
-      } else{
-        res.status(404).send({error: "user can't found"})
+      try{
+        const result = await UserCollection.findOne(userId)
+        if(result){
+          res.send(result);
+        }else{
+          res.status(404).send({error: "user cna't find it"})
+        }
+      } catch(err){
+        res.status(500).send({error: "an error occurred" , details: err.message})
       }
     })
     // Send a ping to confirm a successful connection
@@ -70,8 +74,6 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
-
 
 
 app.get('/', function(req, res){
