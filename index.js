@@ -51,9 +51,9 @@ async function run() {
       const result = await user.toArray()
       res.send(result)
     })
-    app.get('/user/:name',async(req,res)=>{
-      const name = req.params.name;
-      const userId = {name: name};
+    app.get('/user/:displayName',async(req,res)=>{
+      const name = req.params.displayName;
+      const userId = {displayName: name};
       try{
         const result = await UserCollection.findOne(userId)
         if(result){
