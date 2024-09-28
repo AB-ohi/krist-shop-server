@@ -66,7 +66,7 @@ async function run() {
       }
     })
 
-
+//post api
     app.post('/user', async (req, res)=>{
       const user = req.body;
       const query = {email: user.email};
@@ -77,6 +77,38 @@ async function run() {
       const result = await UserCollection.insertOne(user);
       res.send(result);
     })
+
+// update api
+
+app.patch('/user/:displayName', async(req, res)=>{
+  const {displayName} = req.params;
+  const {pictureUrl} = req.body;
+  if (!displayName) {
+    return res.status(400).json({ message: 'displayName is required' });
+  }
+
+  if(!pictureUrl){
+    return res.status(400).json({message:'pictureUrl is required'})
+  }
+  try {
+    const updateUserData = await UserCollection.findOneAndUpdate(
+      {displayName : displayName},
+      {$set:{pictureUrl : pictureUrl}},
+      {new:true, runValidators:true}
+    );
+    console.log(updateUserData)
+    if(!updateUserData){
+      return res.status(404).json({message:'user not found'});
+    }
+    return res.json(updateUserData)
+  } catch (error) {
+    return res.status(500).json({message:"Error  updating pictureUrl", error})
+  }
+
+})
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
