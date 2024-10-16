@@ -28,6 +28,8 @@ async function run() {
 
     const mensCollection = client.db("shop").collection("men");
     const UserCollection = client.db("shop").collection("user");
+    const addressCollection = client.db("shop").collection("addressData");
+    const contactCollection = client.db("shop").collection("contact");
   
     app.get('/men', async(req, res)=>{
       const menCloth = mensCollection.find();
@@ -65,7 +67,18 @@ async function run() {
         res.status(500).send({error: "an error occurred" , details: err.message})
       }
     })
+app.get('/addressAPI', async(req,res)=>{
+  const address = addressCollection.find();
+  const result = await address.toArray()
+  res.send(result)
+})
+app.get('/contact', async(req,res)=>{
+  const contact = contactCollection.find();
+  const result = await contact.toArray()
+  
+    res.send(result)
 
+})
 //post api
     app.post('/user', async (req, res)=>{
       const user = req.body;
@@ -96,7 +109,7 @@ app.patch('/user/:displayName', async(req, res)=>{
       {$set:{pictureUrl : pictureUrl}},
       {new:true, runValidators:true}
     );
-    console.log(updateUserData)
+    // console.log(updateUserData)
     if(!updateUserData){
       return res.status(404).json({message:'user not found'});
     }
