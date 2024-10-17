@@ -30,6 +30,7 @@ async function run() {
     const UserCollection = client.db("shop").collection("user");
     const addressCollection = client.db("shop").collection("addressData");
     const contactCollection = client.db("shop").collection("contact");
+    const userAddressCollection = client.db("shop").collection("user_address");
   
     app.get('/men', async(req, res)=>{
       const menCloth = mensCollection.find();
@@ -79,6 +80,14 @@ app.get('/contact', async(req,res)=>{
     res.send(result)
 
 })
+
+//  app.get('/address', async(req, res)=>{
+//   const userAddress = userAddressCollection.find();
+//   const findUser = 
+//  })
+
+
+
 //post api
     app.post('/user', async (req, res)=>{
       const user = req.body;
@@ -89,6 +98,13 @@ app.get('/contact', async(req,res)=>{
       }
       const result = await UserCollection.insertOne(user);
       res.send(result);
+    })
+
+
+    app.post('/address', async(req, res)=>{
+      const address = req.body;
+      const userAddress =  await userAddressCollection.insertOne(address);
+      res.send(userAddress)
     })
 
 // update api
