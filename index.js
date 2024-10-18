@@ -81,10 +81,11 @@ app.get('/contact', async(req,res)=>{
 
 })
 
-//  app.get('/address', async(req, res)=>{
-//   const userAddress = userAddressCollection.find();
-//   const findUser = 
-//  })
+ app.get('/address', async(req, res)=>{
+  const userAddress = userAddressCollection.find();
+  const result = await userAddress.toArray();
+  res.send(result)
+ })
 
 
 
@@ -103,8 +104,14 @@ app.get('/contact', async(req,res)=>{
 
     app.post('/address', async(req, res)=>{
       const address = req.body;
-      const userAddress =  await userAddressCollection.insertOne(address);
-      res.send(userAddress)
+      const query = {homeAddress: address.homeAddress}
+      const existingAddress =  await userAddressCollection.findOne(query);
+      if(existingAddress){
+        return res.send({message:'user address already exists'})
+      }else{
+        const result = await userAddressCollection.insertOne(address)
+        res.send(result)
+      }
     })
 
 // update api
