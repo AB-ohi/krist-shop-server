@@ -25,6 +25,11 @@ async function run() {
     await client.connect();
 
     const mensCollection = client.db("shop").collection("men");
+    const womensCollection = client.db("shop").collection("women");
+    const footsCollection = client.db("shop").collection("foots");
+    const kidsCollection = client.db("shop").collection("kids");
+    const BAndFCollection = client.db("shop").collection("[b&f]");
+    const westernCollection = client.db("shop").collection("western");
     const UserCollection = client.db("shop").collection("user");
     const addressCollection = client.db("shop").collection("addressData");
     const contactCollection = client.db("shop").collection("contact");
@@ -35,7 +40,7 @@ async function run() {
       const result = await menCloth.toArray();
       res.send(result);
     });
-
+    
     app.get("/men/:id", async (req, res) => {
       const id = req.params.id;
       const selectItem = { _id: new ObjectId(id) };
@@ -47,6 +52,35 @@ async function run() {
         res.status(404).send({ error: "Man not found" });
       }
     });
+
+
+
+    app.get("/women", async (req, res) => {
+      const menCloth = womensCollection.find();
+      const result = await menCloth.toArray();
+      res.send(result);
+    });
+    app.get("/foot", async (req, res) => {
+      const menCloth = footsCollection.find();
+      const result = await menCloth.toArray();
+      res.send(result);
+    });
+    app.get("/kids", async (req, res) => {
+      const menCloth = kidsCollection.find();
+      const result = await menCloth.toArray();
+      res.send(result);
+    });
+    app.get("/b&f", async (req, res) => {
+      const menCloth = BAndFCollection.find();
+      const result = await menCloth.toArray();
+      res.send(result);
+    });
+    app.get("/western", async (req, res) => {
+      const menCloth = westernCollection.find();
+      const result = await menCloth.toArray();
+      res.send(result);
+    });
+
     app.get("/user", async (req, res) => {
       const user = UserCollection.find();
       const result = await user.toArray();
