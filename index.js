@@ -200,6 +200,32 @@ async function run() {
       }
     });
 
+    app.patch("/user/by-id/:_id", async(req,res)=>{
+      const id = req.params._id;
+      const {role} = req.body;
+      if(!role ||(role !== 'admin' && role !=='customer')){
+        return res.status(400).json({error:'Invalid role'})
+      }
+      
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).json({ error: "Invalid user ID" });
+      }
+
+      const query = {_id: new ObjectId(id)};
+      const updateDoc ={
+        $set:{
+          role: {role},
+        }
+        
+      }
+      try{
+        const result = await UserCollection.updateOne(query, updateDoc)
+        res.send(result)
+      }catch{
+        res.status(500).json({error:'failed to update role'})
+      }
+    });
+
     // Delete api
 
     app.delete("/address/:_id",async(req,res)=>{
@@ -212,6 +238,9 @@ async function run() {
         res.status(500).send({error:'Failed to delete address'})
       }
     })
+
+
+    
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
