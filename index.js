@@ -203,7 +203,6 @@
       app.patch("/user/by-id/:_id", async(req,res)=>{
         const id = req.params._id;
         const {role} = req.body;
-        console.log(role)
         if(!role ||(role !== 'admin' && role !=='customer')){
           return res.status(400).json({error:'Invalid role'})
         }
