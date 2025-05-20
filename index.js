@@ -34,6 +34,7 @@
       const addressCollection = client.db("shop").collection("addressData");
       const contactCollection = client.db("shop").collection("contact");
       const userAddressCollection = client.db("shop").collection("user_address");
+      const all_productCollection = client.db("shop").collection("all_product");
 
       app.get("/men", async (req, res) => {
         const menCloth = mensCollection.find();
@@ -119,7 +120,7 @@
         const result = await userAddress.toArray();
         res.send(result);
       });
-
+      
       app.get("/address/:user_name", async (req, res) => {
         const userName = req.params.user_name;
         console.log(userName);
@@ -169,6 +170,11 @@
           res.send(result);
         }
       });
+      app.post("/AllProduct",async(req,res)=>{
+        const product = req.body;
+        const addProduct = await all_productCollection.insertOne(product)
+        res.send(addProduct)
+      })
 
       // update api
 
