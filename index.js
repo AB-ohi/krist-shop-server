@@ -76,8 +76,8 @@
         const result = await menCloth.toArray();
         res.send(result);
       });
-      app.get("/western", async (req, res) => {
-        const menCloth = westernCollection.find();
+      app.get("/AllProduct", async (req, res) => {
+        const menCloth = all_productCollection.find();
         const result = await menCloth.toArray();
         res.send(result);
       });
