@@ -114,7 +114,7 @@
 
         res.send(result);
       });
-
+      
       app.get("/address", async (req, res) => {
         const userAddress = userAddressCollection.find();
         const result = await userAddress.toArray();
@@ -243,6 +243,16 @@
           res.send(result)
         }catch (error){
           res.status(500).send({error:'Failed to delete address'})
+        }
+      })
+      app.delete("/AllProduct/:_id",async(req,res)=>{
+        const id = req.params._id;
+        const query = {_id: new ObjectId(id)}
+        try{
+          const result = await all_productCollection.deleteOne(query);
+          res.send(result)
+        }catch(error){
+          res.status(500).send({error:'fail to delete single product'})
         }
       })
 
