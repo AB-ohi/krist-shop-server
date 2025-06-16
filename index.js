@@ -154,8 +154,7 @@
           role: "customer"
         };  
         console.log("Saving user:", newUser);
-        console.log(newUser)
-        const result = await UserCollection.insertOne(newUser);
+       const result = await UserCollection.insertOne(newUser);
         res.send(result);
       });
 
@@ -205,6 +204,21 @@
             .json({ message: "Error  updating pictureUrl", error });
         }
       });
+      app.patch("/AllProduct/:_id", async(req,res)=>{
+        const id = req.params._id;
+        const {product_name,main_price,quantity,discount} = req.body
+        const query = {_id: new ObjectId(id)}
+        const updateProductInfo = {
+          $set:{
+            product_name:product_name,
+            main_price:main_price,
+            quantity:quantity,
+            discount:discount
+          }
+        }
+        const result = await all_productCollection.updateOne(updateProductInfo);
+        res.send(result)
+      })
 
       app.patch("/user/by-id/:_id", async(req,res)=>{
         const id = req.params._id;
