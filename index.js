@@ -137,6 +137,14 @@ async function run() {
       }
     });
 
+    app.get("/AllProduct/:category", async(req,res)=>{
+      const category = req.params.category;
+      console.log(category)
+      const queryCategory = {category: category};
+      const result = await all_productCollection.find(queryCategory).toArray();
+      res.send(result)
+    })
+
     //post api
     app.post("/user", async (req, res) => {
       const user = req.body;
@@ -169,7 +177,7 @@ async function run() {
         res.send(result);
       }
     });
-    app.post("/AllProduct", async (req, res) => {
+    app.post("/AllProduct/", async (req, res) => {
       const product = req.body;
       const addProduct = await all_productCollection.insertOne(product);
       res.send(addProduct);
@@ -207,6 +215,7 @@ async function run() {
     app.patch("/AllProduct/:_id", async (req, res) => {
       const id = req.params._id;
       const { product_name, main_price, quantity, discount,discount_price } = req.body;
+      console.log(discount_price)
       const query = { _id: new ObjectId(id) };
       const updateProductInfo = {
         $set: {
@@ -217,6 +226,7 @@ async function run() {
           ...(discount_price&& {discount_price})
         },
       };
+      console.log(updateProductInfo)
       const result = await all_productCollection.updateOne(
         query,
         updateProductInfo
