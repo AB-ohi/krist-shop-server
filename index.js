@@ -141,8 +141,17 @@ async function run() {
       const category = req.params.category;
       console.log(category)
       const queryCategory = {category: category};
-      const result = await all_productCollection.find(queryCategory).toArray();
-      res.send(result)
+      try{
+        const result = await all_productCollection.find(queryCategory).toArray();
+        if(result){
+          res.send(result);
+        }else{
+          res.status(404).send({error:"category can't found"})
+        }
+      }
+      catch (error){
+        res.send({ error: "an error occurred", details: error.message });
+      }
     })
 
     //post api
