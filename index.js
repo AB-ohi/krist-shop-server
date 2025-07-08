@@ -137,9 +137,8 @@ async function run() {
       }
     });
 
-    app.get("/AllProduct/:category", async(req,res)=>{
+    app.get("/AllProduct/category/:category", async(req,res)=>{
       const category = req.params.category;
-      console.log(category)
       const queryCategory = {category: category};
       try{
         const result = await all_productCollection.find(queryCategory).toArray();
@@ -153,6 +152,25 @@ async function run() {
         res.send({ error: "an error occurred", details: error.message });
       }
     })
+
+
+   app.get("/AllProduct/:_id", async (req, res) => {
+  const id = req.params._id;
+  console.log(id)
+  const selectItem = { _id: new ObjectId(id) }; 
+
+  try {
+    const result = await all_productCollection.findOne(selectItem);
+    if (result) {
+      res.send(result);
+    } else {
+      res.status(404).send({ error: "Product not found" });
+    }
+  } catch (error) {
+    res.status(500).send({ error: "An error occurred", details: error.message });
+  }
+});
+
 
     //post api
     app.post("/user", async (req, res) => {
