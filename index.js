@@ -35,6 +35,7 @@ async function run() {
     const contactCollection = client.db("shop").collection("contact");
     const userAddressCollection = client.db("shop").collection("user_address");
     const all_productCollection = client.db("shop").collection("all_product");
+    const eventCollection = client.db("shop").collection("event");
 
     app.get("/men", async (req, res) => {
       const menCloth = mensCollection.find();
@@ -154,7 +155,7 @@ async function run() {
     })
 
 
-   app.get("/AllProduct/:_id", async (req, res) => {
+   app.get("/AllProduct/detail/:_id", async (req, res) => {
   const id = req.params._id;
   console.log(id)
   const selectItem = { _id: new ObjectId(id) }; 
@@ -209,6 +210,12 @@ async function run() {
       const addProduct = await all_productCollection.insertOne(product);
       res.send(addProduct);
     });
+
+    app.post("/events/", async(req,res)=>{
+      const event = req.body;
+      const addEvent = await eventCollection.insertOne(event);
+      res.send(addEvent);
+    })
 
     // update api
 
