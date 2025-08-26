@@ -172,6 +172,15 @@ async function run() {
   }
 });
 
+app.get("/events/", async(req,res)=>{
+  const event = eventCollection.find();
+  const result = await event.toArray();
+  res.send(result);
+})
+
+
+
+
 
     //post api
     app.post("/user", async (req, res) => {
