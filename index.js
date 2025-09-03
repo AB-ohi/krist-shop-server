@@ -325,6 +325,18 @@ app.get("/events/", async(req,res)=>{
       }
     });
 
+    app.delete("/events/:_id", async(req, res)=>{
+      const id = req.params._id;
+      const query = {_id: new ObjectId(id)};
+      try{
+        const result = await eventCollection.deleteOne(query);
+        res.send(result);
+      }
+      catch(error){
+        res.status(500).send({error: "fail to delete single event"});
+      }
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
