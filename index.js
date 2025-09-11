@@ -138,49 +138,47 @@ async function run() {
       }
     });
 
-    app.get("/AllProduct/category/:category", async(req,res)=>{
+    app.get("/AllProduct/category/:category", async (req, res) => {
       const category = req.params.category;
-      const queryCategory = {category: category};
-      try{
-        const result = await all_productCollection.find(queryCategory).toArray();
-        if(result){
+      const queryCategory = { category: category };
+      try {
+        const result = await all_productCollection
+          .find(queryCategory)
+          .toArray();
+        if (result) {
           res.send(result);
-        }else{
-          res.status(404).send({error:"category can't found"})
+        } else {
+          res.status(404).send({ error: "category can't found" });
         }
-      }
-      catch (error){
+      } catch (error) {
         res.send({ error: "an error occurred", details: error.message });
       }
-    })
+    });
 
+    app.get("/AllProduct/detail/:_id", async (req, res) => {
+      const id = req.params._id;
+      console.log(id);
+      const selectItem = { _id: new ObjectId(id) };
 
-   app.get("/AllProduct/detail/:_id", async (req, res) => {
-  const id = req.params._id;
-  console.log(id)
-  const selectItem = { _id: new ObjectId(id) }; 
+      try {
+        const result = await all_productCollection.findOne(selectItem);
+        if (result) {
+          res.send(result);
+        } else {
+          res.status(404).send({ error: "Product not found" });
+        }
+      } catch (error) {
+        res
+          .status(500)
+          .send({ error: "An error occurred", details: error.message });
+      }
+    });
 
-  try {
-    const result = await all_productCollection.findOne(selectItem);
-    if (result) {
+    app.get("/events/", async (req, res) => {
+      const event = eventCollection.find();
+      const result = await event.toArray();
       res.send(result);
-    } else {
-      res.status(404).send({ error: "Product not found" });
-    }
-  } catch (error) {
-    res.status(500).send({ error: "An error occurred", details: error.message });
-  }
-});
-
-app.get("/events/", async(req,res)=>{
-  const event = eventCollection.find();
-  const result = await event.toArray();
-  res.send(result);
-})
-
-
-
-
+    });
 
     //post api
     app.post("/user", async (req, res) => {
@@ -220,11 +218,11 @@ app.get("/events/", async(req,res)=>{
       res.send(addProduct);
     });
 
-    app.post("/events/", async(req,res)=>{
+    app.post("/events/", async (req, res) => {
       const event = req.body;
       const addEvent = await eventCollection.insertOne(event);
       res.send(addEvent);
-    })
+    });
 
     // update api
 
@@ -257,8 +255,9 @@ app.get("/events/", async(req,res)=>{
     });
     app.patch("/AllProduct/:_id", async (req, res) => {
       const id = req.params._id;
-      const { product_name, main_price, quantity, discount,discount_price } = req.body;
-      console.log(discount_price)
+      const { product_name, main_price, quantity, discount, discount_price } =
+        req.body;
+      console.log(discount_price);
       const query = { _id: new ObjectId(id) };
       const updateProductInfo = {
         $set: {
@@ -266,10 +265,10 @@ app.get("/events/", async(req,res)=>{
           ...(main_price && { main_price }),
           ...(quantity && { quantity }),
           ...(discount && { discount }),
-          ...(discount_price&& {discount_price})
+          ...(discount_price && { discount_price }),
         },
       };
-      console.log(updateProductInfo)
+      console.log(updateProductInfo);
       const result = await all_productCollection.updateOne(
         query,
         updateProductInfo
@@ -280,7 +279,14 @@ app.get("/events/", async(req,res)=>{
     app.patch("/user/by-id/:_id", async (req, res) => {
       const id = req.params._id;
       const { role } = req.body;
-      if (!role || (role !== "admin" && role !== "customer")) {
+      if (
+        !role ||
+        (role !== "admin" &&
+          role !== "customer" &&
+          role !== "shop owner" &&
+          role !== "outlet" &&
+          role !== "manager")
+      ) {
         return res.status(400).json({ error: "Invalid role" });
       }
 
@@ -325,19 +331,17 @@ app.get("/events/", async(req,res)=>{
       }
     });
 
-    app.delete("/events/:_id", async(req, res)=>{
+    app.delete("/events/:_id", async (req, res) => {
       const id = req.params._id;
-      const query = {_id: new ObjectId(id)};
-      try{
+      const query = { _id: new ObjectId(id) };
+      try {
         const result = await eventCollection.deleteOne(query);
         res.send(result);
+      } catch (error) {
+        res.status(500).send({ error: "fail to delete single event" });
       }
-      catch(error){
-        res.status(500).send({error: "fail to delete single event"});
-      }
-    })
+    });
 
-    // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
