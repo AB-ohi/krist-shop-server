@@ -180,6 +180,19 @@ async function run() {
       }
     });
 
+    app.get('/AllProduct/single_payment/:_id', async(req,res)=>{
+      const id = req.params.body;
+      const select_payment_item = { _id: new ObjectId(id)};
+      try{
+        const result = await all_productCollection.findOne(select_payment_item);
+        if(result){
+          res.send(result)
+        }
+      }
+      catch{
+      } 
+    })
+
     app.get("/events/", async (req, res) => {
       const event = eventCollection.find();
       const result = await event.toArray();
@@ -363,7 +376,6 @@ async function run() {
     cart_items
   } = req.body;
 
-  // Generate unique transaction ID
   const tran_id = 'TXN_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
 
   const data = {
@@ -453,11 +465,11 @@ app.post("/api/payment/success/:tran_id", async (req, res) => {
     );
 
     // Redirect to frontend success page
-    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/payment/success?tran_id=${tran_id}`);
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/success?tran_id=${tran_id}`);
 
   } catch (error) {
     console.error('Payment success error:', error);
-    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/payment/fail`);
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/fail`);
   }
 });
 
@@ -479,11 +491,11 @@ app.post("/api/payment/fail/:tran_id", async (req, res) => {
     );
 
     // Redirect to frontend fail page
-    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/payment/fail?tran_id=${tran_id}`);
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/fail?tran_id=${tran_id}`);
 
   } catch (error) {
     console.error('Payment fail error:', error);
-    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/payment/fail`);
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/fail`);
   }
 });
 
@@ -504,11 +516,11 @@ app.post("/api/payment/cancel/:tran_id", async (req, res) => {
     );
 
     // Redirect to frontend cancel page
-    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/payment/cancel?tran_id=${tran_id}`);
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/cancel?tran_id=${tran_id}`);
 
   } catch (error) {
     console.error('Payment cancel error:', error);
-    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/payment/cancel`);
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/payment/cancel`);
   }
 });
 
