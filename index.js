@@ -181,7 +181,7 @@ async function run() {
     });
 
     app.get('/AllProduct/single_payment/:_id', async(req,res)=>{
-      const id = req.params.body;
+      const id = req.params._id;
       const select_payment_item = { _id: new ObjectId(id)};
       try{
         const result = await all_productCollection.findOne(select_payment_item);
@@ -189,7 +189,8 @@ async function run() {
           res.send(result)
         }
       }
-      catch{
+      catch(error){
+        res .status(500)
       } 
     })
 
