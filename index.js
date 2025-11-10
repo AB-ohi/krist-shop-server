@@ -200,7 +200,13 @@ async function run() {
       res.send(result);
     });
 
-    //post api
+    app.get("/api/payment/", async(req, res)=>{
+      const allPayment = paymentCollection.find();
+      const result = await allPayment.toArray();
+      res.send(result);
+    })
+
+    
     app.post("/user", async (req, res) => {
       const user = req.body;
       console.log(user);
