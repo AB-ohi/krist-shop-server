@@ -88,7 +88,6 @@ async function run() {
       const result = await menCloth.toArray();
       res.send(result);
     });
-
     app.get("/user", async (req, res) => {
       const user = UserCollection.find();
       const result = await user.toArray();
