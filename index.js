@@ -16,7 +16,8 @@ app.use(express.json());
 
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.qthn2pl.mongodb.net/?retryWrites=true&w=majority`;
-
+const BACKEND_URL = (process.env.BACKEND_URL || "").replace(/\/$/, "");
+const FRONTEND_URL = (process.env.FRONTEND_URL || "").replace(/\/$/, "");
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -375,10 +376,10 @@ app.post("/api/payment/init", async (req, res) => {
     total_amount: parseFloat(total_amount),
     currency: "BDT",
     tran_id: tran_id,
-    success_url: `${process.env.BACKEND_URL}/api/payment/success/${tran_id}`,
-    fail_url: `${process.env.BACKEND_URL}/api/payment/fail/${tran_id}`,
-    cancel_url: `${process.env.BACKEND_URL}/api/payment/cancel/${tran_id}`,
-    ipn_url: `${process.env.BACKEND_URL}/api/payment/ipn`,
+    success_url: `${BACKEND_URL}/api/payment/success/${tran_id}`,
+fail_url: `${BACKEND_URL}/api/payment/fail/${tran_id}`,
+cancel_url: `${BACKEND_URL}/api/payment/cancel/${tran_id}`,
+ipn_url: `${BACKEND_URL}/api/payment/ipn`,
     shipping_method: "Courier",
     product_name: product_name || "General Products",
     product_category: "general",
@@ -450,10 +451,10 @@ app.post("/api/payment/success/:tran_id", async (req, res) => {
         },
       }
     );
-    res.redirect(`${process.env.FRONTEND_URL}/payment/success?tran_id=${tran_id}`);
+    res.redirect(`${FRONTEND_URL}/payment/success?tran_id=${tran_id}`);
   } catch (error) {
     console.error("Payment success error:", error);
-    res.redirect(`${process.env.FRONTEND_URL}/payment/fail`);
+    res.redirect(`${FRONTEND_URL}/payment/fail`);
   }
 });
 
@@ -470,10 +471,10 @@ app.post("/api/payment/fail/:tran_id", async (req, res) => {
         },
       }
     );
-    res.redirect(`${process.env.FRONTEND_URL}/payment/fail?tran_id=${tran_id}`);
+    res.redirect(`${FRONTEND_URL}/payment/fail?tran_id=${tran_id}`);
   } catch (error) {
     console.error("Payment fail error:", error);
-    res.redirect(`${process.env.FRONTEND_URL}/payment/fail`);
+    res.redirect(`${FRONTEND_URL}/payment/fail`);
   }
 });
 
@@ -484,10 +485,10 @@ app.post("/api/payment/cancel/:tran_id", async (req, res) => {
       { tran_id: tran_id },
       { $set: { status: "cancelled", updated_at: new Date() } }
     );
-    res.redirect(`${process.env.FRONTEND_URL}/payment/cancel?tran_id=${tran_id}`);
+    res.redirect(`${FRONTEND_URL}/payment/cancel?tran_id=${tran_id}`);
   } catch (error) {
     console.error("Payment cancel error:", error);
-    res.redirect(`${process.env.FRONTEND_URL}/payment/cancel`);
+    res.redirect(`${FRONTEND_URL}/payment/cancel`);
   }
 });
 
